@@ -18,11 +18,8 @@ public class Member {
     @GeneratedValue
     private Long id;
 
-    @ManyToMany
-    @JoinTable(name = "MEMBER_PRODUCT",
-            joinColumns = @JoinColumn(name = "MEMBER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "PRODUCT_ID"))
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "LOCKER_ID")
