@@ -285,3 +285,60 @@ public class Child {
 
 ### @EmbeddedId
 
+```java
+@Entity
+public class Parent {
+    
+    @EmbeddedId
+    private ParentId id;
+    
+    private String name;
+}
+```
+```java
+@Embeddable
+public class ParentId implements Serializable {
+    @Column(name = "PARENT_ID1")
+    private String id1;
+
+    @Column(name = "PARENT_ID2")
+    private String id2;
+
+    equals, hashCode ...
+}
+```
+
+@IdClass 와 달리 식별자 클래스에 기본 키를 직접 매핑한다.
+
+#### 조건?
+- @Embeddable 어노테이션을 붙인다.
+- Serializable 을 구현해야 한다.
+- equals, hashCode 구현해야 한다.
+- 기본 생성자가 있어야 한다.
+- 식별자 클래스는 public 이어야 한다.
+
+```java
+EmbeddedParent parent = new EmbeddedParent();
+parent.setId(new EmbeddedParentId("myId1", "myId2"));
+parent.setName("parentName");
+em.persist(parent);
+
+em.flush();
+em.clear();
+
+EmbeddedParentId parentId = new EmbeddedParentId("myId1", "myId2");
+EmbeddedParent foundParent = em.find(EmbeddedParent.class, parentId);
+Assertions.assertThat(foundParent).isNotEqualTo(parent);
+Assertions.assertThat(foundParent.getName()).isEqualTo("parentName");
+```
+
+@IdClass 와 다르게 ParentId 의 인스턴스를 Parent 의 기본 키로 사용한다.
+
+복합 키에는 @GenerateValue 를 사용할 수 없다.
+
+### 복합 키 : 식별 관계 매핑
+
+![identifying mapping](https://leejaedoo.github.io/assets/img/%EC%8B%9D%EB%B3%84%EA%B4%80%EA%B3%84.jpg)
+
+Parent 테이블의 PK 가 GrandChild 까지 전달된다.
+
