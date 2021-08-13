@@ -19,7 +19,7 @@ public class Member {
     private Long id;
 
     @OneToMany(mappedBy = "member")
-    private List<MemberProduct> memberProducts = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "LOCKER_ID")
